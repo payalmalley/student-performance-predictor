@@ -1,0 +1,61 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Environment variables / secrets
+.env
+.env.*
+
+# ===== Flask =====
+instance/
+.webassets-cache
+
+# ===== Testing / Coverage =====
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ===== VS Code =====
+.vscode/
+*.code-workspace
+
+# ===== Visual Studio =====
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+bin/
+obj/
+
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Logs =====
+*.log
+
+# ===== Future ML phase (large files/models — not needed in Phase 1) =====
+*.csv
+*.pkl
+*.h5
+*.model
+data/
+models/
