@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Performance Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') if url_for else 'style.css' }}">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>Student Performance Predictor</h1>
+    <p class="tagline">Phase 1 — Rule-Based Prototype</p>
+  </header>
+
+  <main class="container">
+
+    <!--
+      CONTRACT NOTES FOR PAYAL / app.py:
+      - Route: POST /predict
+      - Field names below are FINAL for Phase 1 — please match these exactly in app.py / rules.py:
+          role                -> "student" or "teacher"
+          attendance           -> number, 0-100 (percentage)
+          marks                -> number, current/latest marks (0-100)
+          marks_history        -> comma-separated numbers, e.g. "72,68,75,80" (past scores, oldest to newest)
+          grade                -> text, e.g. "A", "B", "C", "D", "F"
+      - Expected template variables Flask should pass back on render (used below, guarded so page still
+        works standalone with no backend):
+          result.category      -> string, e.g. "On Track" / "At Risk" / "Needs Improvement"
+          result.reasons        -> list of strings explaining the category
+      - marks_history is parsed client-side (JS) into the chart below. If you'd rather parse/validate
+        it server-side and pass back a clean list, let's agree on that in NOTES.md before wiring app.py.
+    -->
+
+    <form action="/predict" method="POST" class="predictor-form" id="predictor-form">
+
+      <fieldset>
+        <legend>Who's filling this out?</legend>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="role" value="student" checked>
+            Student
+          </label>
+          <label>
+            <input type="radio" name="role" value="teacher">
+            Teacher
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Performance Details</legend>
+
+        <div class="form-row">
+          <label for="attendance">Attendance (%)</label>
+          <input type="number" id="attendance" name="attendance" min="0" max="100" step="1" required>
+        </div>
+
+        <div class="form-row">
+          <label for="marks">Current Marks (%)</label>
+          <input type="number" id="marks" name="marks" min="0" max="100" step="1" required>
+        </div>
+
+        <div class="form-row">
+          <label for="marks_history">Marks History</label>
+          <input type="text" id="marks_history" name="marks_history"
+                 placeholder="e.g. 72,68,75,80 (oldest to newest)" required>
+          <small>Comma-separated past scores, used to draw the progress chart below.</small>
+        </div>
+
+        <div class="form-row">
+          <label for="grade">Current Grade</label>
+          <select id="grade" name="grade" required>
+            <option value="" disabled selected>Select grade</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="F">F</option>
+          </select>
+        </div>
+
+      </fieldset>
+
+      <button type="submit">Predict Performance</button>
+    </form>
+
+    <section class="chart-section">
+      <h2>Progress Chart</h2>
+      <canvas id="progressChart" width="500" height="220"></canvas>
+      <p class="chart-hint">Updates live from the Marks History field above (client-side preview only —
+        final rendering after prediction can come from Flask-provided data instead).</p>
+    </section>
+
+    <!--
+      RESULT BLOCK — only meaningful once Flask/Jinja is wired up.
+      Left as plain HTML with Jinja tags; on a raw browser open (no Flask) these tags
+      just won't do anything special, which is fine for layout checking.
+    -->
+    {% if result %}
+    <section class="result-box">
+      <h2>Result: {{ result.category }}</h2>
+      <ul>
+        {% for reason in result.reasons %}
+        <li>{{ reason }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Phase 1 prototype — rule-based, not machine learning.</p>
+  </footer>
+
+  <script>
+    // Minimal, dependency-free bar chart drawn on <canvas>.
+    // Reads marks_history live so you can preview the chart before app.py exists.
+    // No external library needed — keeps Phase 1 lightweight per the project constraints.
+    function drawChart() {
+      const canvas = document.getElementById('progressChart');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const raw = document.getElementById('marks_history').value.trim();
+      if (!raw) return;
+
+      const values = raw.split(',')
+        .map(v => parseFloat(v.trim()))
+        .filter(v => !isNaN(v));
+
+      if (values.length === 0) return;
+
+      const padding = 30;
+      const chartWidth = canvas.width - padding * 2;
+      const chartHeight = canvas.height - padding * 2;
+      const barGap = 10;
+      const barWidth = (chartWidth / values.length) - barGap;
+      const maxVal = 100; // marks are 0-100
+
+      // axis
+      ctx.strokeStyle = '#999';
+      ctx.beginPath();
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, canvas.height - padding);
+      ctx.lineTo(canvas.width - padding, canvas.height - padding);
+      ctx.stroke();
+
+      values.forEach((val, i) => {
+        const barHeight = (val / maxVal) * chartHeight;
+        const x = padding + i * (barWidth + barGap) + barGap / 2;
+        const y = canvas.height - padding - barHeight;
+
+        ctx.fillStyle = '#6B2D3C';
+        ctx.fillRect(x, y, barWidth, barHeight);
+
+        ctx.fillStyle = '#333';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(val, x + barWidth / 2, y - 4);
+      });
+    }
+
+    document.getElementById('marks_history').addEventListener('input', drawChart);
+    window.addEventListener('DOMContentLoaded', drawChart);
+  </script>
+
+</body>
+</html>
