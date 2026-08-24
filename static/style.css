@@ -1,0 +1,135 @@
+:root {
+  --burgundy: #6B2D3C;
+  --warm-grey: #E8E3DC;
+  --dark-text: #2A2222;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--warm-grey);
+  color: var(--dark-text);
+  margin: 0;
+  padding: 0;
+}
+
+.site-header {
+  background: var(--burgundy);
+  color: var(--warm-grey);
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.6rem;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--warm-grey);
+  opacity: 0.85;
+}
+
+.container {
+  max-width: 640px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+fieldset {
+  border: 1px solid var(--burgundy);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: #fff;
+}
+
+legend {
+  font-weight: 600;
+  padding: 0 0.5rem;
+  color: var(--burgundy);
+}
+
+.radio-group {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-row {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row label {
+  font-weight: 500;
+  margin-bottom: 0.35rem;
+  color: var(--dark-text);
+}
+
+.form-row input,
+.form-row select {
+  padding: 0.5rem;
+  border: 1px solid var(--burgundy);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: var(--dark-text);
+  background: #fff;
+}
+
+.form-row small {
+  color: var(--dark-text);
+  opacity: 0.7;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+}
+
+button[type="submit"] {
+  background: var(--burgundy);
+  color: var(--warm-grey);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background: #571f2c;
+}
+
+.chart-section {
+  background: #fff;
+  border: 1px solid var(--burgundy);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.chart-hint {
+  font-size: 0.8rem;
+  color: var(--dark-text);
+  opacity: 0.7;
+}
+
+.result-box {
+  background: var(--warm-grey);
+  border: 1px solid var(--burgundy);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  color: var(--dark-text);
+}
+
+.site-footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--dark-text);
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
