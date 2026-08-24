@@ -11,17 +11,14 @@ def evaluate_student(attendance, marks, study_hours):
         errors.append("Marks must be between 0 and 100.")
     if study_hours < 0:
         errors.append("Study hours cannot be negative.")
-
     if errors:
-        return {"valid": False, "errors": errors}
+        return {"valid": False, "category": "Error", "reasons": errors}
 
     # --- Scoring ---
     # Attendance: up to 40 points
     attendance_score = (attendance / 100) * 40
-
     # Marks: up to 40 points
     marks_score = (marks / 100) * 40
-
     # Study hours: up to 20 points (capped at 10 hrs/day = full points)
     study_score = min(study_hours / 10, 1) * 20
 
@@ -59,5 +56,5 @@ def evaluate_student(attendance, marks, study_hours):
         "valid": True,
         "score": round(total_score, 1),
         "category": category,
-        "reasons": reasons
+        "reasons": reasons,
     }
