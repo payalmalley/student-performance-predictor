@@ -3,6 +3,7 @@ from rules import evaluate_student
 
 app = Flask(__name__)
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
@@ -13,9 +14,14 @@ def index():
             study_hours = float(request.form.get("study_hours", ""))
             result = evaluate_student(attendance, marks, study_hours)
         except ValueError:
-            result = {"valid": False, "errors": ["Please enter valid numbers in all fields."]}
+            result = {
+                "valid": False,
+                "category": "Error",
+                "reasons": ["Please enter valid numbers in all fields."],
+            }
 
     return render_template("index.html", result=result)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
